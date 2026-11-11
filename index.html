@@ -132,7 +132,7 @@ function salir(){TOKEN='';QUIEN='';login()}
 function iniciar(){barra(true);app('<p class="muted">Cargando…</p>');if(PACK) ficha(); else lista();}
 function irLista(){PACK='';iniciar()}
 function abrirPack(id){PACK=id;iniciar()}
-function pill(t,est){var c={'Apto':'ok','SÍ':'ok','No apto':'bad','NO':'bad','Rechazo temprano':'bad','Rechazado en Etapa 1':'bad','Etapa 1 pendiente de antecedentes':'warn','EA':'warn','En evaluación':'warn','Conservación':'ok','Seguimiento':'warn','Intervención':'bad'}[t]||'';return '<span class="pill '+(est?'est ':'')+c+'">'+esc(t||'—')+'</span>'}
+function pill(t,est){var c={'Apto':'ok','SÍ':'ok','No apto':'bad','NO':'bad','Rechazo temprano':'bad','Rechazado en Etapa 1':'bad','Etapa 1 pendiente de antecedentes':'warn','EA':'warn','No válido':'warn','En evaluación':'warn','Conservación':'ok','Seguimiento':'warn','Intervención':'bad'}[t]||'';return '<span class="pill '+(est?'est ':'')+c+'">'+esc(t||'—')+'</span>'}
 
 function lista(){
   google.script.run.withSuccessHandler(function(ps){
@@ -172,7 +172,7 @@ function pintar(){
       return '<div class="sec"><h3>'+esc(s.titulo)+'</h3>'+s.filas.map(function(campos,j){
         var filas=campos.filter(function(c){total++;if(c.valor!=='')llenos++;if(c.pend)np++;return VER_VACIOS||c.valor!==''||c.pend}).map(function(c){
           if(c.pend) return '<tr class="pe"><td>'+esc(c.label)+(c.unidad?' ('+esc(c.unidad)+')':'')+'</td><td><span class="pill pend">Pendiente</span></td></tr>';
-          var v=c.valor===''?'<span class="muted">—</span>':(/^(SÍ|NO|EA|Sí|No)$/.test(c.valor)&&/[Cc]umple|EA|Anomal|dentro/.test(c.label)?pill(c.valor):esc(c.valor)+(c.unidad&&c.valor!==''&&!isNaN(Number(c.valor))?' '+esc(c.unidad):''));
+          var v=c.valor===''?'<span class="muted">—</span>':(/^(SÍ|NO|EA|Sí|No)$/.test(c.valor)&&/[Cc]umple|EA|Anomal|dentro|[Vv]álido/.test(c.label)?pill(c.valor):esc(c.valor)+(c.unidad&&c.valor!==''&&!isNaN(Number(c.valor))?' '+esc(c.unidad):''));
           return '<tr><td>'+esc(c.label)+'</td><td'+(c.calc?' class="c"':'')+'>'+v+'</td></tr>'}).join('');
         return (s.filas.length>1?'<div class="muted" style="margin-top:8px">Registro '+(j+1)+'</div>':'')+'<table>'+(filas||'<tr><td colspan="2" class="muted">Sin datos registrados.</td></tr>')+'</table>';
       }).join('')+'</div>';
